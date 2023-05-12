@@ -35,6 +35,7 @@ async function run() {
     await client.connect();
 
     const serviceCollection = client.db('carsDoctor').collection('services')
+    const bookingCollection = client.db('carsDoctor').collection('booking')
     
     app.get('/services', async(req, res)=>{
       const cursor = serviceCollection.find();
@@ -55,6 +56,28 @@ async function run() {
       const result = await serviceCollection.findOne(query, options)
       res.send (result)
     })
+
+    // booking
+
+    app.get ('/checkout', async(req, res)=>{
+      console.log(req.query.email);
+      let query = {};
+      if (req.query?.email){
+        query= {email:req.query.email}
+      }
+      const result = await bookingCollection.find(query).toArray()
+      res.send (result)
+    })
+
+
+    app.post ('/checkout', async(req, res)=>{
+      const booking = req.body;
+      console.log(booking);
+      const result = await bookingCollection.insertOne(booking)
+      res.send (result)
+    })
+
+
 
 
 
