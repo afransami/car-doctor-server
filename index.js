@@ -60,7 +60,7 @@ async function run() {
     // booking
 
     app.get ('/checkout', async(req, res)=>{
-      console.log(req.query.email);
+      // console.log(req.query.email);
       let query = {};
       if (req.query?.email){
         query= {email:req.query.email}
@@ -77,7 +77,26 @@ async function run() {
       res.send (result)
     })
 
+    app.patch('/checkout/:id', async(req, res)=>{
+      const id= req.params.id;       
+      const query= {_id: new ObjectId(id)};    
+      const updateCheckout = req.body;
+      console.log(updateCheckout);
+      const updateDoc ={
+        $set:{
+          status: updateCheckout.status
+        },
+      };
+      const result = await bookingCollection.updateOne(query, updateDoc)
+      res.send(result)
+    })
 
+    app.delete('/checkout/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await bookingCollection.deleteOne(query)
+      res.send(result)
+    })
 
 
 
